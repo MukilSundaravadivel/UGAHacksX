@@ -26,8 +26,7 @@ const Layout = (props) => {
   return (
     <div className={s.root}>
       <div className={s.wrap}>
-        <Header />
-        <Sidebar />
+        {/* <Header /> */}
         <main className={s.content}>
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
@@ -39,10 +38,11 @@ const Layout = (props) => {
             <Route path="/template/ui-elements" exact render={() => <Redirect to={"/template/ui-elements/charts"} />} />
             <Route path="/template/ui-elements/charts" exact component={Charts} />
             <Route path="/template/ui-elements/icons" exact component={Icons} />
-            <Route path="/template/ui-elements/maps" exact component={Maps} />
+            {/*<Route path="/template/ui-elements/maps" exact component={Maps} />*/}
             <Route path='*' exact render={() => <Redirect to="/error" />} />
           </Switch>
         </main>
+        <Sidebar />
         <Footer />
       </div>
     </div>

@@ -11,7 +11,8 @@
   position: relative;
   min-height: 100vh;
   display: flex;
-  margin-left: $sidebar-width-open;
+  margin-right: $sidebar-width-open;
+  margin-left: 0;
   flex-direction: column;
   right: 0;
   left: 0;

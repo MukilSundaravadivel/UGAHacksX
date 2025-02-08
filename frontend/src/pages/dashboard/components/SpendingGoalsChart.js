@@ -1,16 +1,16 @@
 import React from "react";
 import ApexCharts from "react-apexcharts";
 
-const series = [{
-  name: 'Your Activity',
-  type: 'column',
-  data: [350, 275, 375, 375, 300, 225, 275]
-}, {
-  name: 'Your Goal',
-  type: 'line',
-  data: [400, 350, 450, 400, 350, 300, 350]
+// const series = [{
+//   name: 'Your Activity',
+//   type: 'column',
+//   data: [350, 275, 375, 375, 300, 225, 275]
+// }, {
+//   name: 'Your Goal',
+//   type: 'line',
+//   data: [400, 350, 450, 400, 350, 300, 350]
 
-}];
+// }];
 
 const chartSettings = {
   colors: ["#FFCA41", "#43BC13"],
@@ -36,7 +36,7 @@ const chartSettings = {
       borderWidth: 0,
     },
   },
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  labels: ["Aug", "Sept", "Oct", "Nov", "Dec", "Jan", "Feb"],
   legend: {
     position: "top",
     floating: true,
@@ -73,7 +73,7 @@ const chartSettings = {
   }
 };
 
-export default function ApexActivityChart() {
+export default function SpendingGoalsChart({ series }) {
   return (
     <ApexCharts
       options={chartSettings}
