@@ -100,6 +100,23 @@
   height: auto;
 }
 
+.closeButton {
+  background-color: #cbcbcb;
+  color: #333;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 10px 0;
+  display: block;
+  width: 17%;
+  text-align: left;
+}
+
+.closeButton:hover {
+  color: red;
+}
+
 
 
 .questionsContainer {

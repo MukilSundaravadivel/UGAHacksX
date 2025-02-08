@@ -19,7 +19,7 @@ const Sidebar = (props) => {
 
   const [burgerSidebarOpen, setBurgerSidebarOpen] = useState(false)
   const [inputValue, setInputValue] = useState('');  // State for textbox
-  const [questions, setQuestions] = useState([]); // Store questions array
+  const [chat, setQuestions] = useState([]); // Store questions array
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Sidebar = (props) => {
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
-      setQuestions([...questions, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
+      setQuestions([...chat, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
       setInputValue('');  // Clear the input field
     }
   }
@@ -48,7 +48,7 @@ const Sidebar = (props) => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [questions]);
+  }, [chat]);
 
   return (
     <nav className={cn(s.root, {[s.sidebarOpen]: burgerSidebarOpen})} >
@@ -56,12 +56,15 @@ const Sidebar = (props) => {
       <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
         <span className={s.title}>Truist Chat</span>
       </header>
+      <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
+        ✖ Close
+      </button>
       <ul className={s.nav}>
         <li className={s.navItem}>
           <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
-            {questions.map((question, index) => (
+            {chat.map((chat, index) => (
               <div key={index} className={s.questionItem}>
-                <p>{question}</p>
+                <p>{chat}</p>
               </div>
             ))}
           </div>
