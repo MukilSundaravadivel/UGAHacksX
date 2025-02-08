@@ -152,7 +152,6 @@ class Model():
                     )
 
                     response = completion.choices[0].message.content
-                    print("\n" + response)
 
                     # update conversation summary
                     self.conversation_summary = f"""
