@@ -88,15 +88,12 @@ const Sidebar = (props) => {
             {
               header: 'Icons', link: '/template/ui-elements/icons',
             },
-            {
-              header: 'Google Maps', link: '/template/ui-elements/maps',
-            },
+            // {
+            //   header: 'Google Maps', link: '/template/ui-elements/maps',
+            // },
           ]}
         />
       </ul>
-      <div className="bg-widget d-flex mt-auto ml-1">
-        <Button className="rounded-pill my-3 body-2 d-none d-md-block" type="submit" color="secondary-red">Unlock Full Version</Button>
-      </div>
     </nav>
   );
 }
