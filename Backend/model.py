@@ -22,7 +22,7 @@ class Model():
 
         # get the user data from the database
         if user_data_row:
-            user_data = {
+            self.user_data = {
                 'income': user_data_row[0],
                 'total_expenditures': user_data_row[1],
                 'spending': {
@@ -44,18 +44,18 @@ class Model():
 
         self.prompt_engineering = f"""You are a chatbot that helps Truist customers with their financial data. The customer has the following data:
 
-        Total Assets: ${user_data['checking_balance'] + user_data['savings_balance'] + user_data['cd_balance']}
-        Checking Account: ${user_data['checking_balance']}
-        Savings Account: ${user_data['savings_balance']}
-        Certificate of Deposits: ${user_data['cd_balance']}
-        Income Last Month: ${user_data['income']}
-        Expenditures Last Month: ${user_data['total_expenditures']}
+        Total Assets: ${self.user_data['checking_balance'] + self.user_data['savings_balance'] + self.user_data['cd_balance']}
+        Checking Account: ${self.user_data['checking_balance']}
+        Savings Account: ${self.user_data['savings_balance']}
+        Certificate of Deposits: ${self.user_data['cd_balance']}
+        Income Last Month: ${self.user_data['income']}
+        Expenditures Last Month: ${self.user_data['total_expenditures']}
 
         Last Month's Expenditures:
-        - Rent: ${user_data['spending']['rent']}
-        - Groceries: ${user_data['spending']['groceries']}
-        - Entertainment: ${user_data['spending']['entertainment']}
-        - Savings: ${user_data['spending']['savings']}
+        - Rent: ${self.user_data['spending']['rent']}
+        - Groceries: ${self.user_data['spending']['groceries']}
+        - Entertainment: ${self.user_data['spending']['entertainment']}
+        - Savings: ${self.user_data['spending']['savings']}
 
         You are to use a series of identifiers enclosed within \BEGINIDENTIFIERS the line before the first identifier and \ENDIDENTIFIERS the line after the last identifier. These identifiers will be used to generate multimodal elements directly after each text message in order, so ensure chronology of the message. Put this at the top of the message.
 
@@ -74,18 +74,18 @@ class Model():
 
         self.conversation_summary = f"""
         User's Financial Summary:
-        - Income: ${user_data['income']}
-        - Total Expenditures: ${user_data['total_expenditures']}
-        - Checking: ${user_data['checking_balance']}
-        - Savings: ${user_data['savings_balance']}
-        - CDs: ${user_data['cd_balance']}
+        - Income: ${self.user_data['income']}
+        - Total Expenditures: ${self.user_data['total_expenditures']}
+        - Checking: ${self.user_data['checking_balance']}
+        - Savings: ${self.user_data['savings_balance']}
+        - CDs: ${self.user_data['cd_balance']}
 
         Last AI Suggestion: (No suggestions yet)
         """
 
-        # self.zelle_transfer_done = False
-        # self.zelle_account = ""
-        # self.zelle_amount = 0.0
+        self.zelle_transfer_done = False
+        self.zelle_account = ""
+        self.zelle_amount = 0.0
     
     def extract_identifiers_and_suggestions(self, response):
         # Extract identifiers
@@ -120,11 +120,11 @@ class Model():
                     pseudoQuestion = ""
                     
                     # Check if it's the first time Zelle information is being entered
-                    # if not self.zelle_transfer_done:
-                    #    self.zelle_account = zelle_account
-                    #    self.zelle_amount = transfer_amount
-                    #    self.zelle_transfer_done = True
-                    #    pseudoQuestion = f"SUCCESS Zelle transfer request received. Please confirm the transfer of ${self.zelle_amount} to {self.zelle_account}."
+                    if not self.zelle_transfer_done:
+                       self.zelle_account = zelle_account
+                       self.zelle_amount = transfer_amount
+                       self.zelle_transfer_done = True
+                       pseudoQuestion = f"SUCCESS Zelle transfer request received. Please confirm the transfer of ${self.zelle_amount} to {self.zelle_account}."
 
                     # Process transfer after the first input
                     # Subtract transfer amount from current balance (Checking or Savings)
@@ -140,7 +140,6 @@ class Model():
                         balance_type = "None"
                         pseudoQuestion = f"FAIL Insufficient funds for Zelle transfer."
 
-                    # Generate a new response (start of serious spaghetti code)
                     completion = self.client.chat.completions.create(
                         model="gpt-4o",
                         messages=[
@@ -153,7 +152,7 @@ class Model():
                     )
 
                     response = completion.choices[0].message.content
-                    print("hsadifhasdlfhla" + response)
+                    print("\n" + response)
 
                     # update conversation summary
                     self.conversation_summary = f"""
