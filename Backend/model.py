@@ -1,13 +1,14 @@
 import sqlite3
 from openai import OpenAI
 
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
+import re
+import json
 
 class Model():
     def __init__(self):
-        # Load environment variables from .env file
-        load_dotenv()
+        #load_dotenv()
         openAi_api_key = os.getenv("OPEN_AI_API_KEY")
 
         self.client = OpenAI(api_key = openAi_api_key)
@@ -81,7 +82,59 @@ class Model():
 
         Last AI Suggestion: (No suggestions yet)
         """
+
+        # self.zelle_transfer_done = False
+        # self.zelle_account = ""
+        # self.zelle_amount = 0.0
     
+    def extract_identifiers_and_suggestions(self, response):
+        # Extract identifiers
+        identifiers = re.findall(r'\\BEGINIDENTIFIERS(.*?)\\ENDIDENTIFIERS', response, re.DOTALL)
+        # Extract suggestions
+        suggestions = re.findall(r'\\BEGINSUGGESTIONS(.*?)\\ENDSUGGESTIONS', response, re.DOTALL)
+        
+        return identifiers, suggestions
+
+
+    def clean_response(self, response):
+            # Remove identifiers and suggestions sections from the message to user
+            clean_response = re.sub(r'\\BEGINIDENTIFIERS.*?\\ENDIDENTIFIERS', '', response, flags=re.DOTALL)
+            clean_response = re.sub(r'\\BEGINSUGGESTIONS.*?\\ENDSUGGESTIONS', '', clean_response, flags=re.DOTALL)
+            return clean_response.strip()
+
+
+    def process_zelle_transfer(self, identifiers):
+        for identifier in identifiers:
+            if identifier.startswith("ZELLE"):
+                # Parse ZELLE identifier to get the amount
+                match = re.match(r"ZELLE_(\S+)_\$(\d+(\.\d+)?)", identifier)
+                if match:
+                    zelle_account = match.group(1)
+                    transfer_amount = float(match.group(2))
+                    
+                    # Check if it's the first time Zelle information is being entered
+                    if not self.zelle_transfer_done:
+                        self.zelle_account = zelle_account
+                        self.zelle_amount = transfer_amount
+                        self.zelle_transfer_done = True
+                        return f"Zelle transfer request received. Please confirm the transfer of ${self.zelle_amount} to {self.zelle_account}."
+
+                    # Process transfer after the first input
+                    # Subtract transfer amount from current balance (Checking or Savings)
+                    if self.user_data['checking_balance'] >= transfer_amount:
+                        self.user_data['checking_balance'] -= transfer_amount
+                        balance_type = "Checking"
+                    elif self.user_data['savings_balance'] >= transfer_amount:
+                        self.user_data['savings_balance'] -= transfer_amount
+                        balance_type = "Savings"
+                    else:
+                        balance_type = "None"
+                        return "Insufficient funds for Zelle transfer."
+
+                    # Display updated balance to user
+                    return f"The transfer of ${transfer_amount} to {zelle_account} was successful. Your new {balance_type} balance is ${self.user_data[balance_type.lower() + '_balance']}."
+        return None
+
 
     def newInput(self, user_question):
         # gpt-4o dynamic completion
@@ -98,17 +151,44 @@ class Model():
 
         response = completion.choices[0].message.content
 
-        # update conversation summary
-        self.conversation_summary = f"""
-        {self.conversation_summary}
-        
-        User: {user_question}
-        AI: {response}
-        """
+        identifiers, suggestions = self.extract_identifiers_and_suggestions(response)
 
-        print("\n### AI Response:\n", response)
+        #zelle_message = self.process_zelle_transfer(identifiers)
+        #if zelle_message:
+        #    return zelle_message
 
-        return response;
+        data = {
+            "message": response,
+            "identifiers": identifiers[0].splitlines() if identifiers else [],
+            "suggestions": suggestions[0].splitlines() if suggestions else []
+        }
+
+        # write the data to a JSON file
+        filename = f"response_{len(os.listdir()) + 1}.json"
+        with open(filename, "w") as json_file:
+            json.dump(data, json_file, indent=4)
+
+        clean_message = self.clean_response(response)
+        print("\n" + clean_message)
+
+
+    def main(self):
+        while True:
+            user_question = input("\nAsk a question about your finances (or type 'exit' to quit): ")
+
+            # exit condition
+            if user_question.lower() == "exit":
+                print("Goodbye!")
+                break
+
+            self.newInput(user_question)
+
+if __name__ == "__main__":
+    model = Model()
+    model.main()
+
+
+
 
 
 
