@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button} from 'reactstrap';
+// import { Button} from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import s from "./Sidebar.module.scss";
-import LinksGroup from "./LinksGroup/LinksGroup.js";
-import { changeActiveSidebarItem } from "../../actions/navigation.js";
-import SofiaLogo from "../Icons/SofiaLogo.js";
+// import LinksGroup from "./LinksGroup/LinksGroup.js";
+// import { changeActiveSidebarItem } from "../../actions/navigation.js";
+//import SofiaLogo from "../Icons/SofiaLogo.js";
+import TruistLogo from "../Icons/Truist-Emblem.png";
 import cn from "classnames";
 
 const Sidebar = (props) => {
@@ -17,6 +18,9 @@ const Sidebar = (props) => {
   } = props;
 
   const [burgerSidebarOpen, setBurgerSidebarOpen] = useState(false)
+  const [inputValue, setInputValue] = useState('');  // State for textbox
+  const [chat, setQuestions] = useState([]); // Store questions array
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (props.sidebarOpened) {
@@ -27,72 +31,55 @@ const Sidebar = (props) => {
       }, 0);
     }
   }, [props.sidebarOpened])
+  
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);  // Update state with input value
+  };
+
+  const handleInputSubmit = (event) => {
+    event.preventDefault();
+    if (inputValue.trim()) {
+      setQuestions([...chat, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
+      setInputValue('');  // Clear the input field
+    }
+  }
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [chat]);
 
   return (
     <nav className={cn(s.root, {[s.sidebarOpen]: burgerSidebarOpen})} >
       <header className={s.logo}>
-        <SofiaLogo/>
-        <span className={s.title}>SOFIA</span>
+      <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
+        <span className={s.title}>Truist Chat</span>
       </header>
+      <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
+        ✖ Close
+      </button>
       <ul className={s.nav}>
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Dashboard"
-          isHeader
-          iconName={<i className={'eva eva-home-outline'}/>}
-          link="/template/dashboard"
-          index="dashboard"
-          badge="9"
-        />
-        <h5 className={s.navTitle}>TEMPLATE</h5>
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Typography"
-          isHeader
-          iconName={<i className={'eva eva-text-outline'}/>}
-          link="/template/typography"
-          index="typography"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Tables"
-          isHeader
-          iconName={<i className={'eva eva-grid-outline'}/>}
-          link="/template/tables"
-          index="tables"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Notifications"
-          isHeader
-          iconName={<i className={'eva eva-bell-outline'}/>}
-          link="/template/notifications"
-          index="notifications"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="UI Elements"
-          isHeader
-          iconName={<i className={'eva eva-cube-outline'}/>}
-          link="/template/uielements"
-          index="uielements"
-          childrenLinks={[
-            {
-              header: 'Charts', link: '/template/ui-elements/charts',
-            },
-            {
-              header: 'Icons', link: '/template/ui-elements/icons',
-            },
-            // {
-            //   header: 'Google Maps', link: '/template/ui-elements/maps',
-            // },
-          ]}
-        />
+        <li className={s.navItem}>
+          <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
+            {chat.map((chat, index) => (
+              <div key={index} className={s.questionItem}>
+                <p>{chat}</p>
+              </div>
+            ))}
+          </div>
+        </li>
+        <li className={s.navItem}> {/*Text-box item*/}
+          <form onSubmit = {handleInputSubmit}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}  // Update state when text changes
+              placeholder="Enter a question"
+              className={s.textbox}
+            />
+          </form>
+        </li>
       </ul>
     </nav>
   );
