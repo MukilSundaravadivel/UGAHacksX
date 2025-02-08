@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   Col,
@@ -32,7 +32,45 @@ const Dashboard = () => {
       .map((checkbox, index) => index === id ? !checkbox : checkbox ))
   }
 
-  const meals = [meal1, meal2, meal3];
+  const [spendingData, setSpendingData]  = useState({
+    income: 8087,
+    totalExpenditures: {
+      rent: 4000,
+      groceries: 300,
+      entertainment: 300,
+      savings: 2000
+    },
+    disposableIncome: {
+      checking: 1000,
+      savings: 30000,
+      checkingDeposits: 4000
+    }
+  })
+
+  const [pieData, setPieData] = useState({
+      donut: {
+        data: [
+          { name: 'Rent', value: 1, color: '#FFC405' },
+          { name: 'Groceries', value: 1, color: '#FF5668' },
+          { name: 'Entertainment', value: 1, color: '#4D53E0' },
+          { name: 'Savings', value: 1, color: '#4E99E0' },
+        ],
+      }
+    }
+  );
+
+  useEffect(() => {
+    setPieData({
+      donut: {
+        data: [
+          { name: 'Rent', value: spendingData.totalExpenditures.rent, color: '#FFC405' },
+          { name: 'Groceries', value: spendingData.totalExpenditures.groceries, color: '#FF5668' },
+          { name: 'Entertainment', value: spendingData.totalExpenditures.entertainment, color: '#4D53E0' },
+          { name: 'Savings', value: spendingData.totalExpenditures.savings, color: '#4E99E0' },
+        ],
+      }
+    })
+  }, [spendingData]);
 
   return (
     <div>
@@ -42,10 +80,10 @@ const Dashboard = () => {
             <Col className="mb-4 mb-md-0" xs={12} md={6}>
               <Widget className="">
                 <div className="d-flex justify-content-between widget-p-md">
-                  <div className="headline-3 d-flex align-items-center">Your activity</div>
+                  <div className="headline-3 d-flex align-items-center">Spending Goals</div>
                   <UncontrolledDropdown>
                     <DropdownToggle caret>
-                      &nbsp; Weekly &nbsp;
+                      &nbsp; Monthly &nbsp;
                     </DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem>Daily</DropdownItem>
@@ -60,10 +98,10 @@ const Dashboard = () => {
             <Col xs={12} md={6}>
               <Widget className="widget-p-md">
                 <div className="d-flex justify-content-between">
-                  <div className="headline-3 d-flex align-items-center">Your meals</div>
+                  <div className="headline-3 d-flex align-items-center">Spending Breakdown</div>
                   <UncontrolledDropdown>
                     <DropdownToggle caret>
-                      &nbsp; Weekly &nbsp;
+                      &nbsp; Monthly &nbsp;
                     </DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem>Daily</DropdownItem>
@@ -73,7 +111,7 @@ const Dashboard = () => {
                   </UncontrolledDropdown>
                 </div>
                 <div>
-                  <SpendingPieChart/>
+                  <SpendingPieChart spendingData={pieData}/>
                 </div>
               </Widget>
             </Col>
