@@ -88,9 +88,9 @@ const Sidebar = (props) => {
             {
               header: 'Icons', link: '/template/ui-elements/icons',
             },
-            {
-              header: 'Google Maps', link: '/template/ui-elements/maps',
-            },
+            // {
+            //   header: 'Google Maps', link: '/template/ui-elements/maps',
+            // },
           ]}
         />
       </ul>
