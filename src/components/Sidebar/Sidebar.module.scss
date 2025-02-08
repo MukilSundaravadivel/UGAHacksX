@@ -4,22 +4,22 @@
   display: flex;
   flex-direction: column;
   width: $sidebar-width-open;
-  position: absolute;
-  left: 0;
+  position: fixed;
+  right: 0;
   top: 0;
   bottom: 0;
   padding-left: 16px;
   background-color: $sidebar-color;
   overflow-y: auto;
-  transition: height 1s;
-  transform: translateX(-$sidebar-width-open);
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(0);
 
   @media print {
     display: none;
   }
 
   :global(.sidebar-hide) & {
-    display: none;
+    transform: translateX(100%)
   }
 
   @media (max-width: breakpoint-max(sm)) {
@@ -69,11 +69,12 @@
 .nav {
   padding-bottom: 10px;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; 
+  text-align: right;
 
   li > a > span {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     width: 16px;
     height: 16px;
@@ -86,5 +87,6 @@
   font-weight: $font-weight-normal;
   color: $base-dark-gray;
   text-transform: uppercase;
+  text-align: left;
 }
 

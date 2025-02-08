@@ -90,7 +90,6 @@ const Dashboard = () => {
               </Widget>
             </Col>
           </Row>
-
         </Col>
         <Col className="mt-4 mt-lg-0 pl-grid-col" xs={12} lg={4}>
           <Widget className="widget-p-lg">

@@ -27,7 +27,6 @@ const Layout = (props) => {
     <div className={s.root}>
       <div className={s.wrap}>
         <Header />
-        <Sidebar />
         <main className={s.content}>
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
@@ -43,6 +42,7 @@ const Layout = (props) => {
             <Route path='*' exact render={() => <Redirect to="/error" />} />
           </Switch>
         </main>
+        <Sidebar />
         <Footer />
       </div>
     </div>
