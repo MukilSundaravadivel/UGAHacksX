@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button} from 'reactstrap';
+// import { Button} from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import s from "./Sidebar.module.scss";
-import LinksGroup from "./LinksGroup/LinksGroup.js";
-import { changeActiveSidebarItem } from "../../actions/navigation.js";
-import SofiaLogo from "../Icons/SofiaLogo.js";
+// import LinksGroup from "./LinksGroup/LinksGroup.js";
+// import { changeActiveSidebarItem } from "../../actions/navigation.js";
+//import SofiaLogo from "../Icons/SofiaLogo.js";
+import TruistLogo from "../Icons/Truist-Emblem.png";
 import cn from "classnames";
 
 const Sidebar = (props) => {
@@ -17,6 +18,7 @@ const Sidebar = (props) => {
   } = props;
 
   const [burgerSidebarOpen, setBurgerSidebarOpen] = useState(false)
+  const [inputValue, setInputValue] = useState('');  // State for textbox
 
   useEffect(() => {
     if (props.sidebarOpened) {
@@ -27,72 +29,28 @@ const Sidebar = (props) => {
       }, 0);
     }
   }, [props.sidebarOpened])
+  
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);  // Update state with input value
+  };
 
   return (
     <nav className={cn(s.root, {[s.sidebarOpen]: burgerSidebarOpen})} >
       <header className={s.logo}>
-        <SofiaLogo/>
-        <span className={s.title}>SOFIA</span>
+      <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
+        <span className={s.title}>Truist Chat</span>
       </header>
       <ul className={s.nav}>
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Dashboard"
-          isHeader
-          iconName={<i className={'eva eva-home-outline'}/>}
-          link="/template/dashboard"
-          index="dashboard"
-          badge="9"
-        />
-        <h5 className={s.navTitle}>TEMPLATE</h5>
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Typography"
-          isHeader
-          iconName={<i className={'eva eva-text-outline'}/>}
-          link="/template/typography"
-          index="typography"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Tables"
-          isHeader
-          iconName={<i className={'eva eva-grid-outline'}/>}
-          link="/template/tables"
-          index="tables"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="Notifications"
-          isHeader
-          iconName={<i className={'eva eva-bell-outline'}/>}
-          link="/template/notifications"
-          index="notifications"
-        />
-        <LinksGroup
-          onActiveSidebarItemChange={activeItem => props.dispatch(changeActiveSidebarItem(activeItem))}
-          activeItem={props.activeItem}
-          header="UI Elements"
-          isHeader
-          iconName={<i className={'eva eva-cube-outline'}/>}
-          link="/template/uielements"
-          index="uielements"
-          childrenLinks={[
-            {
-              header: 'Charts', link: '/template/ui-elements/charts',
-            },
-            {
-              header: 'Icons', link: '/template/ui-elements/icons',
-            },
-            // {
-            //   header: 'Google Maps', link: '/template/ui-elements/maps',
-            // },
-          ]}
-        />
+        {/*Add textbox here*/}
+        <li className={s.navItem}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}  // Update state when text changes
+            placeholder="Enter a question"
+            className={s.textbox}
+          />
+        </li>
       </ul>
     </nav>
   );
