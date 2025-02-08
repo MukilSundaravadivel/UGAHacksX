@@ -92,6 +92,13 @@ class Model():
         identifiers = re.findall(r'\\BEGINIDENTIFIERS(.*?)\\ENDIDENTIFIERS', response, re.DOTALL)
         # Extract suggestions
         suggestions = re.findall(r'\\BEGINSUGGESTIONS(.*?)\\ENDSUGGESTIONS', response, re.DOTALL)
+
+        for i in range(len(identifiers)):
+            identifiers[i] = identifiers[i].strip()
+
+        for i in range(len(suggestions)):
+            suggestions[i] = suggestions[i].strip()
+        
         
         return identifiers, suggestions
 
@@ -106,33 +113,56 @@ class Model():
     def process_zelle_transfer(self, identifiers):
         for identifier in identifiers:
             if identifier.startswith("ZELLE"):
-                # Parse ZELLE identifier to get the amount
-                match = re.match(r"ZELLE_(\S+)_\$(\d+(\.\d+)?)", identifier)
-                if match:
-                    zelle_account = match.group(1)
-                    transfer_amount = float(match.group(2))
+                split = identifier.split("_")
+                if split:
+                    zelle_account = split[1]
+                    transfer_amount = float(split[2])
+                    pseudoQuestion = ""
                     
                     # Check if it's the first time Zelle information is being entered
-                    if not self.zelle_transfer_done:
-                        self.zelle_account = zelle_account
-                        self.zelle_amount = transfer_amount
-                        self.zelle_transfer_done = True
-                        return f"Zelle transfer request received. Please confirm the transfer of ${self.zelle_amount} to {self.zelle_account}."
+                    # if not self.zelle_transfer_done:
+                    #    self.zelle_account = zelle_account
+                    #    self.zelle_amount = transfer_amount
+                    #    self.zelle_transfer_done = True
+                    #    pseudoQuestion = f"SUCCESS Zelle transfer request received. Please confirm the transfer of ${self.zelle_amount} to {self.zelle_account}."
 
                     # Process transfer after the first input
                     # Subtract transfer amount from current balance (Checking or Savings)
                     if self.user_data['checking_balance'] >= transfer_amount:
                         self.user_data['checking_balance'] -= transfer_amount
                         balance_type = "Checking"
+                        pseudoQuestion = f"The transfer of ${transfer_amount} to {zelle_account} was successful. Your new {balance_type} balance is ${self.user_data[balance_type.lower() + '_balance']}."
                     elif self.user_data['savings_balance'] >= transfer_amount:
                         self.user_data['savings_balance'] -= transfer_amount
                         balance_type = "Savings"
+                        pseudoQuestion = f"The transfer of ${transfer_amount} to {zelle_account} was successful. Your new {balance_type} balance is ${self.user_data[balance_type.lower() + '_balance']}."
                     else:
                         balance_type = "None"
-                        return "Insufficient funds for Zelle transfer."
+                        pseudoQuestion = f"FAIL Insufficient funds for Zelle transfer."
 
-                    # Display updated balance to user
-                    return f"The transfer of ${transfer_amount} to {zelle_account} was successful. Your new {balance_type} balance is ${self.user_data[balance_type.lower() + '_balance']}."
+                    # Generate a new response (start of serious spaghetti code)
+                    completion = self.client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {"role": "system", "content": self.prompt_engineering},
+                            {
+                                "role": "user",
+                                "content": f"{self.conversation_summary}\nUser's question: {pseudoQuestion}",
+                            },
+                        ]
+                    )
+
+                    response = completion.choices[0].message.content
+                    print("hsadifhasdlfhla" + response)
+
+                    # update conversation summary
+                    self.conversation_summary = f"""
+                    {self.conversation_summary}
+        
+                    User: {pseudoQuestion}
+                    AI: {response}
+                    """
+                    return response
         return None
 
 
@@ -153,12 +183,22 @@ class Model():
 
         identifiers, suggestions = self.extract_identifiers_and_suggestions(response)
 
-        #zelle_message = self.process_zelle_transfer(identifiers)
-        #if zelle_message:
-        #    return zelle_message
+        # update conversation summary
+        self.conversation_summary = f"""
+        {self.conversation_summary}
+        
+        User: {user_question}
+        AI: {response}
+        """
+
+        zelle_message = self.process_zelle_transfer(identifiers)
+        if zelle_message:
+            response = zelle_message
+        
+        clean_message = self.clean_response(response)
 
         data = {
-            "message": response,
+            "message": clean_message,
             "identifiers": identifiers[0].splitlines() if identifiers else [],
             "suggestions": suggestions[0].splitlines() if suggestions else []
         }
@@ -167,8 +207,7 @@ class Model():
         filename = f"response_{len(os.listdir()) + 1}.json"
         with open(filename, "w") as json_file:
             json.dump(data, json_file, indent=4)
-
-        clean_message = self.clean_response(response)
+        
         print("\n" + clean_message)
 
 
