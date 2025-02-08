@@ -20,6 +20,7 @@ import gymIcon from "../../assets/dashboard/gymIcon.svg";
 import therapyIcon from "../../assets/dashboard/therapyIcon.svg";
 import user from "../../assets/user.svg";
 import statsPie from "../../assets/dashboard/statsPie.svg";
+import SpendingPieChart from "./components/SpendingPieChart.js";
 
 import s from "./Dashboard.module.scss";
 
@@ -71,22 +72,9 @@ const Dashboard = () => {
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </div>
-                {meals.map((meal) =>
-                  <div key={uuidv4()} className={`mt-4 ${s.widgetBlock}`}>
-                    <div className={s.widgetBody}>
-                      <div className="d-flex">
-                        <img className="img-fluid mr-2" src={meal} alt="..." />
-                        <div className="d-flex flex-column">
-                          <p className="body-2">Salmon salad</p>
-                          <p className="body-3 muted">300 g</p>
-                        </div>
-                      </div>
-                      <div className="body-3 muted">
-                        175 cal
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <div>
+                  <SpendingPieChart/>
+                </div>
               </Widget>
             </Col>
           </Row>
