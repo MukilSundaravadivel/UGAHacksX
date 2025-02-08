@@ -8,10 +8,10 @@ chat_bot = Model()
 lat = 33.951576
 long = -83.375823
 
-@app.route('/chat')
-def chat_interaction():
-    speech_text = request.args.get('param1')
-    return jsonify({"message" : chat_bot.newInput(speech_text)});
+@app.route('/chat/<chat_message>')
+def chat_interaction(chat_message):
+    print(chat_message)
+    return jsonify({"message" : chat_bot.newInput(chat_message)});
 
 @app.route('/gps')
 def get_coordinates():
