@@ -26,7 +26,7 @@ const Layout = (props) => {
   return (
     <div className={s.root}>
       <div className={s.wrap}>
-        <Header />
+        {/* <Header /> */}
         <main className={s.content}>
           <Breadcrumbs url={props.location.pathname} />
           <Switch>

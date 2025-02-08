@@ -6,16 +6,13 @@ import {
   Progress,
   Button,
   DropdownToggle,
+  Dropdown,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown
 } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
-import ApexActivityChart from "./components/ActivityChart.js";
-
-import meal1 from "../../assets/dashboard/meal-1.svg";
-import meal2 from "../../assets/dashboard/meal-2.svg";
-import meal3 from "../../assets/dashboard/meal-3.svg";
+import SpendingGoalsChart from "./components/SpendingGoalsChart.js";
 import gymIcon from "../../assets/dashboard/gymIcon.svg";
 import therapyIcon from "../../assets/dashboard/therapyIcon.svg";
 import user from "../../assets/user.svg";
@@ -25,12 +22,25 @@ import SpendingPieChart from "./components/SpendingPieChart.js";
 import s from "./Dashboard.module.scss";
 
 const Dashboard = () => {
+
+  
   const [checkboxes, setCheckboxes] = useState([true, false])
 
   const toggleCheckbox = (id) => {
     setCheckboxes(checkboxes => checkboxes
       .map((checkbox, index) => index === id ? !checkbox : checkbox ))
   }
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+  const visStates = {
+    DEFAULT: "default",
+    GOALS: "goals",
+    BREAKDOWN: "breakdown",
+  }
+
+  const [currentVis, setVis] = useState(visStates.DEFAULT);
 
   const [spendingData, setSpendingData]  = useState({
     income: 8087,
@@ -45,7 +55,46 @@ const Dashboard = () => {
       savings: 30000,
       checkingDeposits: 4000
     }
-  })
+  });
+
+  const [rentSeries, setRentSeries] = useState([{
+      name: 'Your Activity',
+      type: 'column',
+      data: [75, 15, 40, 50, 50, 60, 60]
+    }, {
+      name: 'Your Goal',
+      type: 'line',
+      data: [50, 50, 50, 50, 50, 50, 50]
+    }]);
+  const [groceriesSeries, setSpendingSeries] = useState([{
+      name: 'Your Activity',
+      type: 'column',
+      data: [75, 15, 40, 50, 50, 60, 60]
+    }, {
+      name: 'Your Goal',
+      type: 'line',
+      data: [50, 50, 50, 50, 50, 50, 50]
+    }]);
+
+  const [entertainmentSeries, setEntertainmentSeries] = useState([{
+      name: 'Your Activity',
+      type: 'column',
+      data: [75, 15, 40, 50, 50, 60, 60]
+    }, {
+      name: 'Your Goal',
+      type: 'line',
+      data: [50, 50, 50, 50, 50, 50, 50]
+    }]);
+  
+    const [savingsSeries, setSavingsSeries] = useState([{
+      name: 'Your Activity',
+      type: 'column',
+      data: [75, 15, 40, 50, 50, 60, 60]
+    }, {
+      name: 'Your Goal',
+      type: 'line',
+      data: [50, 50, 50, 50, 50, 50, 50]
+    }]);
 
   const [pieData, setPieData] = useState({
       donut: {
@@ -56,8 +105,7 @@ const Dashboard = () => {
           { name: 'Savings', value: 1, color: '#4E99E0' },
         ],
       }
-    }
-  );
+    });
 
   useEffect(() => {
     setPieData({
@@ -72,8 +120,72 @@ const Dashboard = () => {
     })
   }, [spendingData]);
 
-  return (
-    <div>
+  const dropdown = 
+  (<Row>
+    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+      <DropdownToggle caret>Choose a View:</DropdownToggle>
+      <DropdownMenu>
+        <DropdownItem onClick={() => setVis(visStates.DEFAULT)}>Dashboard</DropdownItem>
+        <DropdownItem divider></DropdownItem>
+        <DropdownItem onClick={() => setVis(visStates.GOALS)}>Spending Goals</DropdownItem>
+        <DropdownItem divider></DropdownItem>
+        <DropdownItem onClick={() => setVis(visStates.BREAKDOWN)}>Spending Breakdown</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
+  </Row>);
+
+  if (currentVis == visStates.DEFAULT) {
+    return (
+      <div>
+        {dropdown}
+        <Row>
+          <Col className="pr-grid-col" xs={12} lg={8}>
+            <Row className="gutter mb-4">
+              <Col className="mb-4 mb-md-0" xs={12} md={6}>
+                <Widget className="">
+                  <div className="d-flex justify-content-between widget-p-md">
+                    <div className="headline-3 d-flex align-items-center">Spending Goals</div>
+                    <UncontrolledDropdown>
+                      <DropdownToggle caret>
+                        &nbsp; Monthly &nbsp;
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>Daily</DropdownItem>
+                        <DropdownItem>Weekly</DropdownItem>
+                        <DropdownItem>Monthly</DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </div>
+                  <SpendingGoalsChart series={groceriesSeries} className="pb-4" />
+                </Widget>
+              </Col>
+              <Col className="mb-4 mb-md-0" xs={12} md={6}>
+                <Widget className="">
+                  <div className="d-flex justify-content-between widget-p-md">
+                    <div className="headline-3 d-flex align-items-center">Entertainment Goals</div>
+                    <UncontrolledDropdown>
+                      <DropdownToggle caret>
+                        &nbsp; Monthly &nbsp;
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>Daily</DropdownItem>
+                        <DropdownItem>Weekly</DropdownItem>
+                        <DropdownItem>Monthly</DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </div>
+                  <SpendingGoalsChart series={entertainmentSeries} className="pb-4" />
+                </Widget>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
+    )
+  } else if (currentVis == visStates.GOALS){
+    return (
+      <div>
+      {dropdown}
       <Row>
         <Col className="pr-grid-col" xs={12} lg={8}>
           <Row className="gutter mb-4">
@@ -92,7 +204,93 @@ const Dashboard = () => {
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </div>
-                <ApexActivityChart className="pb-4"/>
+                <SpendingGoalsChart series={rentSeries} className="pb-4" />
+              </Widget>
+            </Col>
+            <Col className="mb-4 mb-md-0" xs={12} md={6}>
+              <Widget className="">
+                <div className="d-flex justify-content-between widget-p-md">
+                  <div className="headline-3 d-flex align-items-center">Grocery/Food Goals</div>
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret>
+                      &nbsp; Monthly &nbsp;
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Daily</DropdownItem>
+                      <DropdownItem>Weekly</DropdownItem>
+                      <DropdownItem>Monthly</DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
+                <SpendingGoalsChart series={groceriesSeries} className="pb-4" />
+              </Widget>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Widget className="">
+                <div className="d-flex justify-content-between widget-p-md">
+                  <div className="headline-3 d-flex align-items-center">Entertainment Goals</div>
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret>
+                      &nbsp; Monthly &nbsp;
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Daily</DropdownItem>
+                      <DropdownItem>Weekly</DropdownItem>
+                      <DropdownItem>Monthly</DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
+                <SpendingGoalsChart series={entertainmentSeries} className="pb-4" />
+              </Widget>
+            </Col>
+            <Col>
+            <Widget className="">
+                <div className="d-flex justify-content-between widget-p-md">
+                  <div className="headline-3 d-flex align-items-center">Savings Goals</div>
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret>
+                      &nbsp; Monthly &nbsp;
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Daily</DropdownItem>
+                      <DropdownItem>Weekly</DropdownItem>
+                      <DropdownItem>Monthly</DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
+                <SpendingGoalsChart series={savingsSeries} className="pb-4" />
+              </Widget>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </div>
+    );
+  }
+  return (
+    <div>
+      {dropdown}
+      <Row>
+        <Col className="pr-grid-col" xs={12} lg={8}>
+          <Row className="gutter mb-4">
+            <Col className="mb-4 mb-md-0" xs={12} md={6}>
+              <Widget className="">
+                <div className="d-flex justify-content-between widget-p-md">
+                  <div className="headline-3 d-flex align-items-center">Spending Goals</div>
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret>
+                      &nbsp; Monthly &nbsp;
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem>Daily</DropdownItem>
+                      <DropdownItem>Weekly</DropdownItem>
+                      <DropdownItem>Monthly</DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
+                <SpendingGoalsChart series={groceriesSeries} className="pb-4" />
               </Widget>
             </Col>
             <Col xs={12} md={6}>
