@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import { Button} from 'reactstrap';
@@ -19,6 +19,8 @@ const Sidebar = (props) => {
 
   const [burgerSidebarOpen, setBurgerSidebarOpen] = useState(false)
   const [inputValue, setInputValue] = useState('');  // State for textbox
+  const [questions, setQuestions] = useState([]); // Store questions array
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (props.sidebarOpened) {
@@ -34,6 +36,20 @@ const Sidebar = (props) => {
     setInputValue(event.target.value);  // Update state with input value
   };
 
+  const handleInputSubmit = (event) => {
+    event.preventDefault();
+    if (inputValue.trim()) {
+      setQuestions([...questions, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
+      setInputValue('');  // Clear the input field
+    }
+  }
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [questions]);
+
   return (
     <nav className={cn(s.root, {[s.sidebarOpen]: burgerSidebarOpen})} >
       <header className={s.logo}>
@@ -41,15 +57,25 @@ const Sidebar = (props) => {
         <span className={s.title}>Truist Chat</span>
       </header>
       <ul className={s.nav}>
-        {/*Add textbox here*/}
         <li className={s.navItem}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}  // Update state when text changes
-          placeholder="Enter a question"
-          className={s.textbox}
-        />
+          <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
+            {questions.map((question, index) => (
+              <div key={index} className={s.questionItem}>
+                <p>{question}</p>
+              </div>
+            ))}
+          </div>
+        </li>
+        <li className={s.navItem}> {/*Text-box item*/}
+          <form onSubmit = {handleInputSubmit}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}  // Update state when text changes
+              placeholder="Enter a question"
+              className={s.textbox}
+            />
+          </form>
         </li>
       </ul>
     </nav>
