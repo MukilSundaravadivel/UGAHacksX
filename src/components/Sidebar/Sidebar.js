@@ -43,13 +43,13 @@ const Sidebar = (props) => {
       <ul className={s.nav}>
         {/*Add textbox here*/}
         <li className={s.navItem}>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}  // Update state when text changes
-            placeholder="Enter a question"
-            className={s.textbox}
-          />
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}  // Update state when text changes
+          placeholder="Enter a question"
+          className={s.textbox}
+        />
         </li>
       </ul>
     </nav>

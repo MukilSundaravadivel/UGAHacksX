@@ -106,5 +106,8 @@
   border: 1px solid #ccc;        /* Border styling */
   border-radius: 4px;            /* Rounded corners */
   box-sizing: border-box;        /* Prevent padding from affecting width */
-  margin-top: auto;               /* Push the textbox to the bottom */
+  margin-top: 10px;               /* Push the textbox to the bottom */
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
