@@ -10,11 +10,13 @@ import requests
 from flask import request, jsonify
 
 class Locator():
-    # Load environment variables from .env file
-    load_dotenv()
+    def __init__(self):
+        # Load environment variables from .env file
+        load_dotenv()
 
-    # Access environment variablesc
-    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+        # Access environment variablesc
+        self.api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    
 
     def get_nearby_banks(lat, lng):
 
@@ -23,7 +25,7 @@ class Locator():
         
 
         # Google Places API endpoint
-        url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=place_id&input=Truist%20Bank&inputtype=textquery&key={api_key}"
+        url = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=place_id&input=Truist%20Bank&inputtype=textquery&key={self.api_key}"
 
         response = requests.get(url)
         data = response.json()
@@ -31,7 +33,7 @@ class Locator():
 
         for candidate in data['candidates']:
             placeID = candidate['place_id']
-            newURL = f"https://maps.googleapis.com/maps/api/place/details/json?fields=formatted_phone_number%2Cname%2Cformatted_address&place_id={placeID}&key={api_key}"
+            newURL = f"https://maps.googleapis.com/maps/api/place/details/json?fields=formatted_phone_number%2Cname%2Cformatted_address&place_id={placeID}&key={self.api_key}"
             newResponse = requests.get(newURL)
             placeData = newResponse.json()
             validBranches.append(placeData)
