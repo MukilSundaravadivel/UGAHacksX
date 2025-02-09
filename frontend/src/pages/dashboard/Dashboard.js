@@ -28,16 +28,16 @@ import s from "./Dashboard.module.scss";
 const Dashboard = () => {
 
   const [data, setData] = useState();
-  useEffect(() => {
-    let fetchRes = fetch("/get-user-data/");
-        // FetchRes is the promise to resolve
-        // it by using.then() method
-        fetchRes.then(res =>
-            res.json()).then(d => {
-              setData(JSON.parse(d));
-              console.log(JSON.parse(d));
-            })
-  });
+  // useEffect(() => {
+  //   let fetchRes = fetch("/get-user-data/");
+  //       // FetchRes is the promise to resolve
+  //       // it by using.then() method
+  //       fetchRes.then(res =>
+  //           res.json()).then(d => {
+  //             setData(JSON.parse(d));
+  //             console.log(JSON.parse(d));
+  //           })
+  // });
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
@@ -107,19 +107,19 @@ const Dashboard = () => {
       {
         id: 1,
         icon: basketIcon,
-        category: "Shopping",
+        category: "Rent",
         date: "05 Jun 2020 10:00",
-        price: "$300",
-        description: "Some text",
+        price: "$1300",
+        description: "Rent",
         dropdownOpen: false,
       },
       {
         id: 2,
         icon: joystickIcon,
-        category: "Shopping",
+        category: "Entertainment",
         date: "05 Jun 2020 10:00",
-        price: "$300",
-        description: "Some text",
+        price: "$97",
+        description: "New Video Games",
         dropdownOpen: false,
       },
       {
@@ -127,17 +127,17 @@ const Dashboard = () => {
         icon: folderIcon,
         category: "Shopping",
         date: "05 Jun 2020 10:00",
-        price: "$300",
-        description: "Some text",
+        price: "$35",
+        description: "Misc. Shopping",
         dropdownOpen: false,
       },
       {
         id: 4,
         icon: bagIcon,
-        category: "Shopping",
+        category: "Groceries",
         date: "05 Jun 2020 10:00",
-        price: "$300",
-        description: "Some text",
+        price: "$97",
+        description: "Groceries",
         dropdownOpen: false,
       }
     ]
@@ -315,52 +315,28 @@ const Dashboard = () => {
                   <p className="body-3 muted">Atlanta, GA</p>
                 </div>
               </div>
-              <div className={s.userParams}>
-                <div className="d-flex flex-column">
-                  <p className="headline-3">63 kg</p>
-                  <p className="body-3 muted">Weight</p>
-                </div>
-                <div className="d-flex flex-column">
-                  <p className="headline-3">175 sm</p>
-                  <p className="body-3 muted">Height</p>
-                </div>
-                <div className="d-flex flex-column">
-                  <p className="headline-3">28 y.</p>
-                  <p className="body-3 muted">Age</p>
-                </div>
-              </div>
               <div className={s.goals}>
                 <div className={s.goalsTitle}>
                   <p className="headline-3">Your Accounts</p>
-                  <UncontrolledDropdown>
-                    <DropdownToggle caret>
-                      &nbsp; Weekly &nbsp;
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem>Daily</DropdownItem>
-                      <DropdownItem>Weekly</DropdownItem>
-                      <DropdownItem>Monthly</DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
                     <p className="body-2">Checking Accounts</p>
-                    <p className="body-2">92<span className="body-3 muted"> / 160</span></p>
+                    <p className="body-2">{spendingData.disposableIncome.checking}<span className="body-3 muted"></span></p>
                   </div>
                   <Progress color="secondary-red" className="progress-xs" value={60} />
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
                     <p className="body-2">Savings Accounts</p>
-                    <p className="body-2">40<span className="body-3 muted"> / 50</span></p>
+                    <p className="body-2">{spendingData.disposableIncome.savings}<span className="body-3 muted"></span></p>
                   </div>
                   <Progress color="secondary-yellow" className="progress-xs" value={80} />
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
                     <p className="body-2">Checking Deposits</p>
-                    <p className="body-2">25<span className="body-3 muted"> / 40</span></p>
+                    <p className="body-2">{spendingData.disposableIncome.checkingDeposits}<span className="body-3 muted">   </span></p>
                   </div>
                   <Progress color="secondary-cyan" className="progress-xs" value={40} />
                 </div>
