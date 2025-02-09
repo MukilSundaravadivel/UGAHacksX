@@ -22,5 +22,9 @@ def get_coordinates():
 def get_info():
     return jsonify({"message": "Hello from Flask!"})
 
+@app.route('/get-user-info')
+def get_user_info():
+    return jsonify(chat_bot.user_data)
+
 if __name__ == '__main__':
     app.run(debug=True)
