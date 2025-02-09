@@ -404,8 +404,5 @@ const Dashboard = () => {
     )
   }
 }
-<<<<<<< HEAD
+
 export default Dashboard;
-=======
-export default Dashboard;
->>>>>>> b8cc18b (Merge the visuals with frontend/backend structure)
