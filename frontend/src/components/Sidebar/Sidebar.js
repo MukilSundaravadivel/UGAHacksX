@@ -24,8 +24,19 @@ const Sidebar = (props) => {
   const [suggestions, setSuggestions] = useState(["What is Truist?", "How can I open an account?", "Tell me about loan options"]);
 
   const handleSuggestionClick = (suggestion) => {
-    setInputValue(suggestion);
-    handleInputSubmit(new Event('submit'));
+    // Add the question to the list (prepend so that newer questions are earlier)
+    setQuestions(prevQuestions => {
+      const newQuestions = [...prevQuestions, suggestion];  // Add question to the list
+      // Now handle the fetch request after updating the question state
+      let fetchRes = fetch("/chat/" + encodeURIComponent(suggestion));
+      fetchRes.then(res => res.json())
+        .then(d => {
+          setQuestions(prevQuestions => [...prevQuestions, d.message]);  // Add the answer to the list
+          setSuggestions(d.suggestions); // Update suggestions
+
+        });
+      return newQuestions; // Return the updated state for questions with the new question
+    });
   };
   const formatMessage = (message) => {
     let formatted = message
