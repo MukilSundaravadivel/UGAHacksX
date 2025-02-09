@@ -102,25 +102,6 @@
   height: auto;
 }
 
-.closeButton {
-  background-color: #cbcbcb;
-  position: absolute;
-  color: #333;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 5px 10px;
-  margin: 10px 0;
-  display: block;
-  width: 17%;
-  text-align: center;
-  right: 5%;
-}
-
-.closeButton:hover {
-  color: red;
-}
-
 
 
 .questionsContainer {
@@ -174,19 +155,21 @@
   word-wrap: break-word; /* Ensure long words break */
   align-self: flex-start;
   text-align: left;
+  border:medium solid  #390048
 }
-/* Speech bubble tail */
-.answerItem::after {
-  content: "";
-  position: absolute;
-  bottom: -10px; /* Adjust based on padding */
-  left: 15px; /* Adjust for alignment */
-  width: 0;
-  height: 0;
-  border-top: 10px solid #d47dde; /* Same as bubble color */
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-}
+// /* Speech bubble tail */
+// .answerItem::after {
+//   content: "";
+//   position: absolute;
+//   bottom: -10px; /* Adjust based on padding */
+//   left: 15px; /* Adjust for alignment */
+//   width: 0;
+//   height: 0;
+//   border-top: 10px solid #d47dde; /* Same as bubble color */
+//   border-left: 10px solid transparent;
+//   border-right: 10px solid transparent;
+//   border:medium solid  #390048
+// }
 
 .textbox{
   width: 100%;                    /* Make the textbox take the full width of the parent */
@@ -196,7 +179,7 @@
   box-sizing: border-box;        /* Prevent padding from affecting width */
   margin-top: 10px;               /* Push the textbox to the bottom */
   position: absolute;
-  bottom: 0;
+  bottom: 0.5%;
   left: 0;
 }
 
@@ -217,8 +200,27 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
+  border: medium solid #720092;
 }
 
 .suggestionButton:hover {
   background: #d248d9;
 }
+
+.submitButton {
+  background-color: #6c63ff; /* Button color */
+  color: white;              /* Text color */
+  border: none;              /* No border */
+  padding: 8px 15px;         /* Padding around the text */
+  border-radius: 6px;        /* Rounded corners */
+  cursor: pointer;          /* Pointer cursor when hovering */
+  transition: background 0.2s; /* Smooth background transition on hover */
+  position: absolute;
+  bottom: 0.75%;
+  right:0.5%;
+}
+
+.submitButton:hover {
+  background-color: #5548d9; /* Darker color on hover */
+}
+
