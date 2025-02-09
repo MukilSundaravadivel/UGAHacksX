@@ -21,6 +21,35 @@ const Sidebar = (props) => {
   const [inputValue, setInputValue] = useState('');  // State for textbox
   const [chat, setQuestions] = useState([]); // Store questions array
   const containerRef = useRef(null);
+  const [suggestions, setSuggestions] = useState(["What is Truist?", "How can I open an account?", "Tell me about loan options"]);
+
+  const handleSuggestionClick = (suggestion) => {
+    // Add the question to the list (prepend so that newer questions are earlier)
+    setQuestions(prevQuestions => {
+      const newQuestions = [...prevQuestions, suggestion];  // Add question to the list
+      // Now handle the fetch request after updating the question state
+      let fetchRes = fetch("/chat/" + encodeURIComponent(suggestion));
+      fetchRes.then(res => res.json())
+        .then(d => {
+          setQuestions(prevQuestions => [...prevQuestions, d.message]);  // Add the answer to the list
+          setSuggestions(d.suggestions); // Update suggestions
+
+        });
+      return newQuestions; // Return the updated state for questions with the new question
+    });
+  };
+
+  const formatMessage = (message) => {
+    let formatted = message
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+      .replace(/`(.*?)`/g, "<code>$1</code>") // Inline Code
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>') // Links
+      .replace(/\n/g, "<br>");  // Convert new lines to <br> tags
+    
+    return formatted;
+  };
+  
 
   useEffect(() => {
     if (props.sidebarOpened) {
@@ -39,16 +68,23 @@ const Sidebar = (props) => {
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
-      setQuestions([...chat, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
+      // Add the question to the list (prepend so that newer questions are earlier)
+      setQuestions(prevQuestions => {
+        const newQuestions = [...prevQuestions, inputValue];  // Add question to the list
+        // Now handle the fetch request after updating the question state
+        let fetchRes = fetch("/chat/" + encodeURIComponent(inputValue));
+        fetchRes.then(res => res.json())
+          .then(d => {
+            setQuestions(prevQuestions => [...prevQuestions, d.message]);  // Add the answer to the list
+            setSuggestions(d.suggestions); // Update suggestions
+
+          });
+        return newQuestions; // Return the updated state for questions with the new question
+      });
+  
       setInputValue('');  // Clear the input field
-      let fetchRes = fetch("/chat/" + encodeURIComponent(inputValue));
-        // FetchRes is the promise to resolve
-        // it by using.then() method
-        fetchRes.then(res =>
-            res.json()).then(d => {
-              setQuestions([...chat, d.message])
-            })
     }
+      
   }
 
   useEffect(() => {
@@ -63,18 +99,25 @@ const Sidebar = (props) => {
       <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
         <span className={s.title}>Truist Chat</span>
       </header>
-      <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
-        ✖ Close
-      </button>
+     
       <ul className={s.nav}>
         <li className={s.navItem}>
-          <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
+          <div className={s.questionsContainer} ref = {containerRef} > {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
             {chat.map((chat, index) => (
-              <div key={index} className={s.questionItem}>
-                <p>{chat}</p>
+              <div key={index} className={index % 2 === 0 ? s.questionItem : s.answerItem}>
+                <p dangerouslySetInnerHTML={{ __html: formatMessage(chat) }}/>
               </div>
             ))}
           </div>
+        </li>
+        <li className={s.suggestionsContainer}>
+          {suggestions.map((suggestion, index) => (
+            <li key={index}>
+              <button type="button" className={s.suggestionButton} onClick={() => handleSuggestionClick(suggestion)}>
+                {suggestion}
+              </button>
+            </li>
+          ))}
         </li>
         <li className={s.navItem}> {/*Text-box item*/}
           <form onSubmit = {handleInputSubmit}>
@@ -85,6 +128,12 @@ const Sidebar = (props) => {
               placeholder="Enter a question"
               className={s.textbox}
             />
+            <button
+              type="submit"
+              className={s.submitButton} // Apply styles to the submit button
+            >
+              Send
+            </button>
           </form>
         </li>
       </ul>

@@ -76,6 +76,7 @@
   overflow-y: auto;
   overflow-x: hidden; 
   text-align: right;
+  flex-wrap: wrap;
 
   li > a > span {
     display: flex;
@@ -93,6 +94,7 @@
   color: $base-dark-gray;
   text-transform: uppercase;
   text-align: left;
+  display: flex;
 }
 
 .logoImage{
@@ -100,35 +102,17 @@
   height: auto;
 }
 
-.closeButton {
-  background-color: #cbcbcb;
-  color: #333;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 5px 10px;
-  margin: 10px 0;
-  display: block;
-  width: 17%;
-  text-align: left;
-}
-
-.closeButton:hover {
-  color: red;
-}
-
 
 
 .questionsContainer {
   right: right;
-  position: relative;
   min-height: 0;
   justify-content: flex-end;
   display: flex;
   flex-direction: column; /* This makes newer items appear at the bottom */
   flex-grow: 1; //Takes up remaining space in sidebar
-  max-height: calc(100vh - 100px); /* Adjust this based on your layout */
-  overflow-y: auto; /* Enables scrolling if content overflows */
+  max-height: calc(82vh - 100px); /* Adjust this based on your layout */
+  overflow-y: scroll; /* Enables scrolling if content overflows */
   padding: 5px; /* Add some padding for aesthetics */
 }
 
@@ -143,19 +127,49 @@
   max-width: 80%; /* Adjust width */
   word-wrap: break-word; /* Ensure long words break */
   align-self: flex-end;
+  border: 2px solid black
 }
 /* Speech bubble tail */
-.questionItem::after {
-  content: "";
-  position: absolute;
-  bottom: -10px; /* Adjust based on padding */
-  right: 15px; /* Adjust for alignment */
-  width: 0;
-  height: 0;
-  border-top: 10px solid #f0f0f0; /* Same as bubble color */
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
+// .questionItem::after {
+//   content: "";
+//   position: absolute;
+//   bottom: -10px; /* Adjust based on padding */
+//   right: 15px; /* Adjust for alignment */
+//   width: 0;
+//   height: 0;
+//   border-top: 10px solid #f0f0f0; /* Same as bubble color */
+//   border-left: 10px solid transparent;
+//   border-right: 10px solid transparent;
+//   border: medium black
+// }
+
+.answerItem {
+  position:relative;
+  bottom: auto;
+  background-color: #d47dde; /* Light gray bubble */
+  color: #333; /* Darker text */
+  padding: 10px 15px;
+  margin-bottom: 10px; /* Space between questions */
+  border-radius: 15px; /* Rounded corners */
+  max-width: 80%; /* Adjust width */
+  word-wrap: break-word; /* Ensure long words break */
+  align-self: flex-start;
+  text-align: left;
+  border:medium solid  #390048
 }
+// /* Speech bubble tail */
+// .answerItem::after {
+//   content: "";
+//   position: absolute;
+//   bottom: -10px; /* Adjust based on padding */
+//   left: 15px; /* Adjust for alignment */
+//   width: 0;
+//   height: 0;
+//   border-top: 10px solid #d47dde; /* Same as bubble color */
+//   border-left: 10px solid transparent;
+//   border-right: 10px solid transparent;
+//   border:medium solid  #390048
+// }
 
 .textbox{
   width: 100%;                    /* Make the textbox take the full width of the parent */
@@ -165,6 +179,48 @@
   box-sizing: border-box;        /* Prevent padding from affecting width */
   margin-top: 10px;               /* Push the textbox to the bottom */
   position: absolute;
-  bottom: 0;
+  bottom: 0.5%;
   left: 0;
 }
+
+.suggestionsContainer {
+  position: absolute;
+  bottom: 7%;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.suggestionButton {
+  background: #c97dde;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: medium solid #720092;
+}
+
+.suggestionButton:hover {
+  background: #d248d9;
+}
+
+.submitButton {
+  background-color: #6c63ff; /* Button color */
+  color: white;              /* Text color */
+  border: none;              /* No border */
+  padding: 8px 15px;         /* Padding around the text */
+  border-radius: 6px;        /* Rounded corners */
+  cursor: pointer;          /* Pointer cursor when hovering */
+  transition: background 0.2s; /* Smooth background transition on hover */
+  position: absolute;
+  bottom: 0.75%;
+  right:0.5%;
+}
+
+.submitButton:hover {
+  background-color: #5548d9; /* Darker color on hover */
+}
+
