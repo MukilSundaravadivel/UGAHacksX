@@ -2,12 +2,12 @@
 ### Project by:
 
 - Kevin Xiang
-- Mukil Sundaravadivel
 - Vaishali Prahalad
+- Mukil Sundaravadivel
 - Rohit Rao
 
 
-// purpose
-// tools utilized
-// problems we ran into & how we overcame them
-// credit any public frameworks (APIs, etc.)
+## Purpose
+## Tools utilized
+## Problems we ran into & how we overcame them
+## Credit any public frameworks (APIs, etc.)
