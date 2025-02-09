@@ -160,7 +160,7 @@
 .answerItem {
   position:relative;
   bottom: auto;
-  background-color: #b700cb; /* Light gray bubble */
+  background-color: #d47dde; /* Light gray bubble */
   color: #333; /* Darker text */
   padding: 10px 15px;
   margin-bottom: 10px; /* Space between questions */
@@ -168,6 +168,7 @@
   max-width: 80%; /* Adjust width */
   word-wrap: break-word; /* Ensure long words break */
   align-self: flex-start;
+  text-align: left;
 }
 /* Speech bubble tail */
 .answerItem::after {
@@ -177,7 +178,7 @@
   left: 15px; /* Adjust for alignment */
   width: 0;
   height: 0;
-  border-top: 10px solid #b418c6; /* Same as bubble color */
+  border-top: 10px solid #d47dde; /* Same as bubble color */
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
 }
