@@ -21,6 +21,12 @@ const Sidebar = (props) => {
   const [inputValue, setInputValue] = useState('');  // State for textbox
   const [chat, setQuestions] = useState([]); // Store questions array
   const containerRef = useRef(null);
+  const [suggestions, setSuggestions] = useState(["What is Truist?", "How can I open an account?", "Tell me about loan options"]);
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputValue(suggestion);
+    handleInputSubmit(new Event('submit'));
+  };
   const formatMessage = (message) => {
     let formatted = message
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
@@ -58,6 +64,8 @@ const Sidebar = (props) => {
         fetchRes.then(res => res.json())
           .then(d => {
             setQuestions(prevQuestions => [...prevQuestions, d.message]);  // Add the answer to the list
+            setSuggestions(d.suggestions); // Update suggestions
+
           });
         return newQuestions; // Return the updated state for questions with the new question
       });
@@ -78,10 +86,11 @@ const Sidebar = (props) => {
       <header className={s.logo}>
       <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
         <span className={s.title}>Truist Chat</span>
+        <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
+          ✖ Close
+        </button>
       </header>
-      <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
-        ✖ Close
-      </button>
+     
       <ul className={s.nav}>
         <li className={s.navItem}>
           <div className={s.questionsContainer} ref = {containerRef} > {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
@@ -91,6 +100,15 @@ const Sidebar = (props) => {
               </div>
             ))}
           </div>
+        </li>
+        <li className={s.suggestionsContainer}>
+          {suggestions.map((suggestion, index) => (
+            <li key={index}>
+              <button type="button" className={s.suggestionButton} onClick={() => handleSuggestionClick(suggestion)}>
+                {suggestion}
+              </button>
+            </li>
+          ))}
         </li>
         <li className={s.navItem}> {/*Text-box item*/}
           <form onSubmit = {handleInputSubmit}>
