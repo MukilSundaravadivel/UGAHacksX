@@ -21,6 +21,17 @@ const Sidebar = (props) => {
   const [inputValue, setInputValue] = useState('');  // State for textbox
   const [chat, setQuestions] = useState([]); // Store questions array
   const containerRef = useRef(null);
+  const formatMessage = (message) => {
+    let formatted = message
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+      .replace(/`(.*?)`/g, "<code>$1</code>") // Inline Code
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>') // Links
+      .replace(/\n/g, "<br>");  // Convert new lines to <br> tags
+    
+    return formatted;
+  };
+  
 
   useEffect(() => {
     if (props.sidebarOpened) {
@@ -73,10 +84,10 @@ const Sidebar = (props) => {
       </button>
       <ul className={s.nav}>
         <li className={s.navItem}>
-          <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
+          <div className={s.questionsContainer} ref = {containerRef} > {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
             {chat.map((chat, index) => (
               <div key={index} className={index % 2 === 0 ? s.questionItem : s.answerItem}>
-                <p>{chat}</p>
+                <p dangerouslySetInnerHTML={{ __html: formatMessage(chat) }}/>
               </div>
             ))}
           </div>
