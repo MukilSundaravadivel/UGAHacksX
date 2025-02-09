@@ -38,6 +38,7 @@ const Sidebar = (props) => {
       return newQuestions; // Return the updated state for questions with the new question
     });
   };
+
   const formatMessage = (message) => {
     let formatted = message
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
@@ -97,9 +98,6 @@ const Sidebar = (props) => {
       <header className={s.logo}>
       <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
         <span className={s.title}>Truist Chat</span>
-        <button className={s.closeButton} onClick={() => props.dispatch({type: 'CLOSE_SIDEBAR'})}>
-          ✖ Close
-        </button>
       </header>
      
       <ul className={s.nav}>
@@ -130,6 +128,12 @@ const Sidebar = (props) => {
               placeholder="Enter a question"
               className={s.textbox}
             />
+            <button
+              type="submit"
+              className={s.submitButton} // Apply styles to the submit button
+            >
+              Send
+            </button>
           </form>
         </li>
       </ul>
