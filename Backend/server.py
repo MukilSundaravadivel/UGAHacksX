@@ -11,7 +11,7 @@ long = -83.375823
 @app.route('/chat/<chat_message>')
 def chat_interaction(chat_message):
     print(chat_message)
-    return jsonify({"message" : chat_bot.newInput(chat_message)});
+    return jsonify(chat_bot.newInput(chat_message))
 
 @app.route('/gps')
 def get_coordinates():

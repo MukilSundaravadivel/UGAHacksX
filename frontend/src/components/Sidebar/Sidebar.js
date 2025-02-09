@@ -41,6 +41,13 @@ const Sidebar = (props) => {
     if (inputValue.trim()) {
       setQuestions([...chat, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
       setInputValue('');  // Clear the input field
+      let fetchRes = fetch("/chat/" + encodeURIComponent(inputValue));
+        // FetchRes is the promise to resolve
+        // it by using.then() method
+        fetchRes.then(res =>
+            res.json()).then(d => {
+              setQuestions([...chat, d.message])
+            })
     }
   }
 

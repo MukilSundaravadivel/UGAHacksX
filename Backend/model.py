@@ -1,14 +1,14 @@
 import sqlite3
 from openai import OpenAI
 
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 import re
 import json
 
 class Model():
     def __init__(self):
-        #load_dotenv()
+        load_dotenv()
         openAi_api_key = os.getenv("OPEN_AI_API_KEY")
 
         self.client = OpenAI(api_key = openAi_api_key)
@@ -207,6 +207,7 @@ class Model():
             json.dump(data, json_file, indent=4)
         
         print("\n" + clean_message)
+        return data
 
 
     def main(self):
