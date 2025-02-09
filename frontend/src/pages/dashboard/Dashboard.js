@@ -37,14 +37,7 @@ const Dashboard = () => {
               setData(JSON.parse(d));
               console.log(JSON.parse(d));
             })
-  })
-
-  const [checkboxes, setCheckboxes] = useState([true, false])
-
-  const toggleCheckbox = (id) => {
-    setCheckboxes(checkboxes => checkboxes
-      .map((checkbox, index) => index === id ? !checkbox : checkbox ))
-  }
+  });
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
@@ -352,21 +345,21 @@ const Dashboard = () => {
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
-                    <p className="body-2">Sleep</p>
+                    <p className="body-2">Checking Accounts</p>
                     <p className="body-2">92<span className="body-3 muted"> / 160</span></p>
                   </div>
                   <Progress color="secondary-red" className="progress-xs" value={60} />
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
-                    <p className="body-2">Sport</p>
+                    <p className="body-2">Savings Accounts</p>
                     <p className="body-2">40<span className="body-3 muted"> / 50</span></p>
                   </div>
                   <Progress color="secondary-yellow" className="progress-xs" value={80} />
                 </div>
                 <div className="d-flex flex-column mt-3">
                   <div className={s.activity}>
-                    <p className="body-2">Water</p>
+                    <p className="body-2">Checking Deposits</p>
                     <p className="body-2">25<span className="body-3 muted"> / 40</span></p>
                   </div>
                   <Progress color="secondary-cyan" className="progress-xs" value={40} />
