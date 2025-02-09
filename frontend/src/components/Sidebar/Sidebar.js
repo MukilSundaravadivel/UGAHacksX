@@ -39,16 +39,21 @@ const Sidebar = (props) => {
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
-      setQuestions([...chat, inputValue]);  // Add the question to the list (prepend so that newer questions are earlier)
+      // Add the question to the list (prepend so that newer questions are earlier)
+      setQuestions(prevQuestions => {
+        const newQuestions = [...prevQuestions, inputValue];  // Add question to the list
+        // Now handle the fetch request after updating the question state
+        let fetchRes = fetch("/chat/" + encodeURIComponent(inputValue));
+        fetchRes.then(res => res.json())
+          .then(d => {
+            setQuestions(prevQuestions => [...prevQuestions, d.message]);  // Add the answer to the list
+          });
+        return newQuestions; // Return the updated state for questions with the new question
+      });
+  
       setInputValue('');  // Clear the input field
-      let fetchRes = fetch("/chat/" + encodeURIComponent(inputValue));
-        // FetchRes is the promise to resolve
-        // it by using.then() method
-        fetchRes.then(res =>
-            res.json()).then(d => {
-              setQuestions([...chat, d.message])
-            })
     }
+      
   }
 
   useEffect(() => {
@@ -70,7 +75,7 @@ const Sidebar = (props) => {
         <li className={s.navItem}>
           <div className={s.questionsContainer} ref = {containerRef}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
             {chat.map((chat, index) => (
-              <div key={index} className={s.questionItem}>
+              <div key={index} className={index % 2 === 0 ? s.questionItem : s.answerItem}>
                 <p>{chat}</p>
               </div>
             ))}
