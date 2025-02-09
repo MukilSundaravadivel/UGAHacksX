@@ -27,17 +27,34 @@ import s from "./Dashboard.module.scss";
 
 const Dashboard = () => {
 
-  const [data, setData] = useState();
+  const [data, setData]  = useState({
+    cd_balance: 500, 
+    checking_balance: 1500, 
+    income: 3500, 
+    savings_balance: 1000, 
+    spending: {
+      entertainment: 100,
+      groceries: 400,
+      rent: 1200,
+      savings: 200
+    }, 
+    total_expenditures: 2200
+  });
+
   useEffect(() => {
-    let fetchRes = fetch("/get-user-data/");
+    let fetchRes = fetch("/get-user-info");
         // FetchRes is the promise to resolve
         // it by using.then() method
-        fetchRes.then(res =>
+        try {
+          fetchRes.then(res =>
             res.json()).then(d => {
-              setData(JSON.parse(d));
-              console.log(JSON.parse(d));
-            })
-  })
+              setData(d);
+              console.log(d);
+            });
+        } catch {
+
+        } 
+  }, [])
 
   const [checkboxes, setCheckboxes] = useState([true, false])
 
@@ -57,20 +74,7 @@ const Dashboard = () => {
 
   const [currentVis, setVis] = useState(visStates.DEFAULT);
 
-  const [spendingData, setSpendingData]  = useState({
-    income: 8087,
-    totalExpenditures: {
-      rent: 4000,
-      groceries: 300,
-      entertainment: 300,
-      savings: 2000
-    },
-    disposableIncome: {
-      checking: 1000,
-      savings: 30000,
-      checkingDeposits: 4000
-    }
-  });
+  
 
   const [rentSeries, setRentSeries] = useState([{
       name: 'Your Activity',
@@ -165,14 +169,14 @@ const Dashboard = () => {
     setPieData({
       donut: {
         data: [
-          { name: 'Rent', value: spendingData.totalExpenditures.rent, color: '#FFC405' },
-          { name: 'Groceries', value: spendingData.totalExpenditures.groceries, color: '#FF5668' },
-          { name: 'Entertainment', value: spendingData.totalExpenditures.entertainment, color: '#4D53E0' },
-          { name: 'Savings', value: spendingData.totalExpenditures.savings, color: '#4E99E0' },
+          { name: 'Rent', value: data.spending.rent, color: '#FFC405' },
+          { name: 'Groceries', value: data.spending.groceries, color: '#FF5668' },
+          { name: 'Entertainment', value: data.spending.entertainment, color: '#4D53E0' },
+          { name: 'Savings', value: data.spending.savings, color: '#4E99E0' },
         ],
       }
     })
-  }, [spendingData]);
+  }, [data]);
 
   const dropdown = 
   (<Row>
