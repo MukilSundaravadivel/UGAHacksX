@@ -19,3 +19,5 @@ We used Python for the backend scripts - including training the model, generatin
 
 ## Credit any public frameworks (APIs, etc.)
 - Used OpenAI GPT-4o API
+- Used open source react template licensed under MIT
+  - [(https://flatlogic.github.io/sofia-react-template/)]
