@@ -55,6 +55,7 @@ const Sidebar = (props) => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
+    
   }, [chat]);
 
   return (

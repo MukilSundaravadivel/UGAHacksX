@@ -56,59 +56,58 @@ const Dashboard = () => {
   }
 
   const [currentVis, setVis] = useState(visStates.DEFAULT);
-
   const [spendingData, setSpendingData]  = useState({
-    income: 8087,
+    income: 3500,
     totalExpenditures: {
-      rent: 4000,
-      groceries: 300,
-      entertainment: 300,
-      savings: 2000
+      rent: 1200,
+      groceries: 400,
+      entertainment: 100,
+      savings: 200
     },
     disposableIncome: {
-      checking: 1000,
-      savings: 30000,
-      checkingDeposits: 4000
+      checking: 1500,
+      savings: 1000,
+      checkingDeposits: 500
     }
   });
 
   const [rentSeries, setRentSeries] = useState([{
       name: 'Your Activity',
       type: 'column',
-      data: [75, 15, 40, 50, 50, 60, 60]
+      data: [1300, 0, 0, 0, 1300, 0, 0]
     }, {
       name: 'Your Goal',
       type: 'line',
-      data: [50, 50, 50, 50, 50, 50, 50]
+      data: [1300, 0, 0, 0, 1300, 0, 0]
     }]);
   const [groceriesSeries, setSpendingSeries] = useState([{
       name: 'Your Activity',
       type: 'column',
-      data: [75, 15, 40, 50, 50, 60, 60]
+      data: [109, 110, 70, 80, 87, 99, 70]
     }, {
       name: 'Your Goal',
       type: 'line',
-      data: [50, 50, 50, 50, 50, 50, 50]
+      data: [85, 85, 85, 85, 85, 85, 85]
     }]);
 
   const [entertainmentSeries, setEntertainmentSeries] = useState([{
       name: 'Your Activity',
       type: 'column',
-      data: [75, 15, 40, 50, 50, 60, 60]
+      data: [30, 70, 29, 150, 60, 31, 50]
     }, {
       name: 'Your Goal',
       type: 'line',
-      data: [50, 50, 50, 50, 50, 50, 50]
+      data: [30, 30, 30, 30, 30, 30, 30]
     }]);
   
     const [savingsSeries, setSavingsSeries] = useState([{
       name: 'Your Activity',
       type: 'column',
-      data: [75, 15, 40, 50, 50, 60, 60]
+      data: [100, 125, 100, 100, 75, 300, 100]
     }, {
       name: 'Your Goal',
       type: 'line',
-      data: [50, 50, 50, 50, 50, 50, 50]
+      data: [100, 100, 100, 100, 100, 100, 100]
     }]);
 
     const transactions = [
