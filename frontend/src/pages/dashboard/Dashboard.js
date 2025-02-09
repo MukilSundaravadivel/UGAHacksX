@@ -27,6 +27,18 @@ import s from "./Dashboard.module.scss";
 
 const Dashboard = () => {
 
+  const [data, setData] = useState();
+  useEffect(() => {
+    let fetchRes = fetch("/get-user-data/");
+        // FetchRes is the promise to resolve
+        // it by using.then() method
+        fetchRes.then(res =>
+            res.json()).then(d => {
+              setData(JSON.parse(d));
+              console.log(JSON.parse(d));
+            })
+  })
+
   const [checkboxes, setCheckboxes] = useState([true, false])
 
   const toggleCheckbox = (id) => {
