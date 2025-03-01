@@ -22,6 +22,7 @@ const Sidebar = (props) => {
   const [chat, setQuestions] = useState([]); // Store questions array
   const containerRef = useRef(null);
   const [suggestions, setSuggestions] = useState(["What is Truist?", "How can I open an account?", "Tell me about loan options"]);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   const handleSuggestionClick = (suggestion) => {
     // Add the question to the list (prepend so that newer questions are earlier)
@@ -87,22 +88,31 @@ const Sidebar = (props) => {
       
   }
 
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  }, [chat]);
+    // Detect user scroll position
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+        setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10); // Buffer of 10px
+      }
+    };
+  
+    // Auto-scroll only when the user is at the bottom
+    useEffect(() => {
+      if (isAtBottom && containerRef.current) {
+        containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
+      }
+    }, [chat]);
 
   return (
     <nav className={cn(s.root, {[s.sidebarOpen]: burgerSidebarOpen})} >
       <header className={s.logo}>
-      <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
-        <span className={s.title}>Truist Chat</span>
+        <img src={TruistLogo} alt="Truist Logo" className={s.logoImage} />
+          <span className={s.title}>Truist Chat</span>
       </header>
      
       <ul className={s.nav}>
         <li className={s.navItem}>
-          <div className={s.questionsContainer} ref = {containerRef} > {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
+          <div className={s.questionsContainer} ref = {containerRef} style={{overflowY:"auto"}} onScroll={handleScroll}> {/*THIS IS WHERE THE CHAT ACTUALLY IS*/}
             {chat.map((chat, index) => (
               <div key={index} className={index % 2 === 0 ? s.questionItem : s.answerItem}>
                 <p dangerouslySetInnerHTML={{ __html: formatMessage(chat) }}/>
