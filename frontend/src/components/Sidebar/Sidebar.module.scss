@@ -113,9 +113,10 @@
   display: flex;
   flex-direction: column; /* This makes newer items appear at the bottom */
   flex-grow: 1; //Takes up remaining space in sidebar
-  max-height: calc(80vh - 100px); /* Adjust this based on your layout */
+  max-height: calc(76vh - 100px); /* Adjust this based on your layout */
   overflow-y: scroll; /* Enables scrolling if content overflows */
   padding: 5px; /* Add some padding for aesthetics */
+  padding-bottom: 10px;
 }
 
 .questionItem {
